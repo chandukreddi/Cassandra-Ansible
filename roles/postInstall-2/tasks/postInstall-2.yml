@@ -1,0 +1,6 @@
+---
+
+- name: Template cqlshrc final copy
+  template: src=cqlshrc.j2 dest=~/.cassandra/cqlshrc backup=yes mode=0755 owner=xdeploy group=xdeploy
+  tags: cqlshrc
+

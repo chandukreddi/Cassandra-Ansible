@@ -1,0 +1,9 @@
+export PATH=$PATH:/opt/xcal/bin:{{ apache_home }}/bin
+
+export PATH 
+CASSANDRA_HOME={{ apache_home }}; export CASSANDRA_HOME
+CASSANDRA_CONF={{ Acassandra_conf }}; export CASSANDRA_CONF
+CASSANDRA_LOG={{ log_base }}; export CASSANDRA_LOG
+alias home='cd $CASSANDRA_HOME'
+alias conf='cd $CASSANDRA_CONF'
+alias logs='cd $CASSANDRA_LOG'

@@ -1,0 +1,42 @@
+---
+
+- name: cqlshrc setup
+  template: src=cqlshrc.j2 dest=~/.cassandra/cqlshrc owner=xdeploy group=xdeploy mode=0755 backup=yes
+  tags: cqlshrc
+
+
+- name: Wait for about 1 minute to make sure all services are up
+  pause: seconds=60
+
+# Changing RF&Repair of Apache Cassandra Keyspaces
+
+- name: Template Setting up the Apache Cassandra system Keyspaces Replication Factor
+  template: src=ACreplicationCassandra.j2 dest=/tmp/replicationCassandra.cql owner=xdeploy group=xdeploy mode=0755
+  when: install_edition == 'ac'
+  tags: cassandraRF
+
+- name: Setting up the Apache Cassandra system Keyspaces Replication Factor
+  #script: /bin/ls -ltr ~ > ~/.ansible/tmp/ls_ltr.txt
+  script: /opt/xcal/bin/cqlsh3 -f /tmp/replicationCassandra.cql
+  when: install_edition == 'ac'
+  tags: cassandraRF
+
+- name: Template Repairing Apache Cassandra system Keyspaces
+  template: src=ACrepairCassandra.j2 dest=/tmp/repairCassandra.sh owner=xdeploy group=xdeploy mode=0755
+  when: install_edition == 'ac'
+  tags: cassandraRepair
+
+- name: Repairing Apahce Cassandra system Keyspaces
+  shell: /tmp/repairCassandra.sh
+  when: install_edition == 'ac'
+  tags: cassandraRepair
+
+# Creating casdba super user
+
+- name: Template Creating user
+  template: src=createUser.j2 dest=/tmp/createUser.cql owner=xdeploy group=xdeploy mode=0755
+  tags: createuser
+
+- name: Creating user
+  script: /opt/xcal/bin/cqlsh3 -f /tmp/createUser.cql
+  tags: createuser

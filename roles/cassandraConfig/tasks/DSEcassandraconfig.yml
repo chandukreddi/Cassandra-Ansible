@@ -1,0 +1,56 @@
+---
+
+- name: Template seed list
+  template: src=seeds.j2 dest=/tmp/seed_list mode=0664
+  tags: generateSeeds 
+
+- name: Load seed list
+  shell: cat /tmp/seed_list
+  register: seed_list
+  tags: seed_list
+
+- name: Set seeds fact
+  set_fact: seeds={{ seed_list.stdout }}
+  tags: setseeds
+- debug: var=seeds
+
+- name: Updating DSE Cassandra.yaml file
+  template: src=DSEcassandra.yaml_5.1.5.j2  dest={{ cassandra_conf }}/cassandra.yaml backup=yes mode=0755
+  tags: cassandra.yaml
+
+- name: Updating DSE logback.xml file
+  template: src=logback.xml_5.1.5.j2 dest={{ cassandra_conf }}/logback.xml backup=yes mode=0755
+  tags: logback.xml
+
+- name: Updating DSE cassandra-rackdc.properties file
+  template: src=cassandra-rackdc.properties.j2 dest={{ cassandra_conf }}/cassandra-rackdc.properties backup=yes mode=0755
+  tags: cassandra-rackdc.properties
+
+- stat: path={{ cassandra_conf }}/cassandra-topology.properties
+  register: topology_file
+- debug: var=topology_file.stat
+- name: Renaming DSE cassandra-topology.properties file
+  command: mv {{ cassandra_conf }}/cassandra-topology.properties {{ cassandra_conf }}/cassandra-topology.properties-org
+  when: topology_file.stat.exists
+
+- name: Updating DSE cassandra-env.sh file
+  template: src=cassandra-env.sh_5.1.5.j2 dest={{ cassandra_conf }}/cassandra-env.sh backup=yes mode=0755
+  tags: cassandra-env.sh
+ 
+- name: Updating DSE jvmoptions file
+  template: src=jvm.options_5.1.5.j2 dest={{ cassandra_conf }}/jvm.options backup=yes mode=0755
+  tags: jvm.options
+
+- name: Updating dse.yaml file
+  template: src=dse.yaml_5.1.5.j2 dest={{ dse_conf }}/dse.yaml backup=yes mode=0755
+  tags: dse.yaml
+
+#- name: Updating dse.default file
+ # template: src=dse.default_5.1.5.j2 dest={{ dse_conf }}/dse.default  backup=yes mode=0755 
+  #tags: dse.default
+
+- name: Updating dse.default file
+  template: src=dse.default_5.1.5.j2 dest={{ dse_conf }}/dse.default backup=yes mode=0755
+  #when: install_edition == "dse" and (SPARK_ENABLED | default(0)) == "1" or SOLR_ENABLED | default(0)) == "1" }
+  when: install_edition == 'dse' or SPARK_ENABLED is defined or SOLR_ENABLED is defined
+  tags: dse.default

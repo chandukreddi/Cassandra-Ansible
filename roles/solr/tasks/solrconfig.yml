@@ -1,0 +1,12 @@
+---
+
+- name: Updating dse.default file
+  template: src=dse.default_5.1.5.j2 dest={{ dse_conf }}/dse.default backup=yes mode=0755
+  #when: install_edition == "dse" and (SPARK_ENABLED | default(0)) == "1" or SOLR_ENABLED | default(0)) == "1" }
+  when: install_edition == 'dse' or SPARK_ENABLED is defined or SOLR_ENABLED is defined
+  tags: dse.default.solr
+  
+#- name: Updating solr-env.sh file
+ # template: src=spark-env.sh_5.1.5.j2 dest={{ SPARK_CONF_DIR }}/spark-env.sh backup=yes mode=0755
+  #tags: solr-env.sh
+ 

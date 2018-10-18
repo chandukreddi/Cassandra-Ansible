@@ -1,0 +1,63 @@
+---
+
+# User Resource Limits
+- name: Setup User Limits conf
+  template: src=99-cassandra_limits.conf.j2 dest=/etc/security/limits.d/99-cassandra_limits.conf backup=yes owner=xdeploy group=xdeploy mode=0755
+  become: true
+  become_user: root
+  tags: ulimit
+  
+
+
+# TCP Settings
+- sysctl:
+    name: net.core.rmem_max
+    value: 16777216
+    sysctl_file: /etc/sysctl.conf
+    reload: no
+  tags: tcp
+- sysctl:
+    name: net.core.wmem_max
+    value: 16777216
+    sysctl_file: /etc/sysctl.conf
+    reload: no
+  tags: tcp
+#- sysctl:
+ #   name: net.core.rmem_default
+  #  value: 16777216
+   # sysctl_file: /etc/sysctl.conf
+    #reload: no
+  #tags: tcp
+#- sysctl:
+ #   name: net.core.wmem_default
+  #  value: 16777216
+   # sysctl_file: /etc/sysctl.conf
+   # reload: no
+  #tags: tcp
+#- sysctl:
+ #   name: net.core.optmem_max
+  #  value: 16777216
+   # sysctl_file: /etc/sysctl.conf
+   # reload: no
+  #tags: tcp
+- sysctl:
+    name: net.ipv4.tcp_rmem
+    value: 4096 87380 16777216
+    sysctl_file: /etc/sysctl.conf
+    reload: no
+  tags: tcp
+- sysctl:
+    name: net.ipv4.tcp_wmem
+    value: 4096 65536 16777216
+    sysctl_file: /etc/sysctl.conf
+    reload: no
+  tags: tcp
+- sysctl:
+    name: vm.max_map_count
+    value: 1048575
+    become: true
+    become_user: root
+    sysctl_file: /etc/sysctl.conf
+    reload: no
+  tags: tcp
+

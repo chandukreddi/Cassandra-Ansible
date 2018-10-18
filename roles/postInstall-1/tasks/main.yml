@@ -1,0 +1,7 @@
+---
+
+#- include: env.yml
+- include: DSEpostsetup_1.yml
+  when: install_edition == 'dse'
+- include: ACpostsetup_1.yml
+  when: install_edition == 'ac'

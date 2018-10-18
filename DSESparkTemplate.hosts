@@ -1,0 +1,51 @@
+[all_cassandra_nodes:children]
+plain_cassandra_nodes
+
+[plain_cassandra_nodes_ch]
+cascds-c5-c00002-g.ch.tvx.comcast.com node_ip=10.54.80.49 repair_weekday=0 seed=true dc=ch rack=chtest1
+cascds-c5-c00003-g.ch.tvx.comcast.com node_ip=10.54.80.50 repair_weekday=1 seed=true dc=ch rack=chtest2
+
+[plain_cassandra_nodes_po]
+cascds-c5-c00004-g.ch.tvx.comcast.com node_ip=10.54.80.51 repair_weekday=2 seed=true dc=po rack=potest1
+cascds-c5-c00005-g.ch.tvx.comcast.com node_ip=10.54.80.52 repair_weekday=3 seed=true dc=po rack=potest2
+cascds-c5-c00006-g.ch.tvx.comcast.com node_ip=10.54.80.53 repair_weekday=4 seed=false dc=po rack=potest3
+
+
+[plain_cassandra_nodes:children]
+plain_cassandra_nodes_ch
+plain_cassandra_nodes_po
+
+[plain_cassandra_nodes:vars]
+dse_version=5.1.5
+spark=true
+cluster_name=Ansible_test
+num_tokens=20
+hints_directory=/opt/cassandra/hints
+log_base=/opt/cassandra/logs
+audit=/opt/cassandra/logs/audit
+data_dir=/opt/cassandra/data
+commitlog_directory=/opt/cassandra/commit_logs
+cdc_raw_directory=/opt/cassandra/cdc_raw
+saved_caches_directory=/opt/cassandra/saved_caches
+solr_data=/opt/cassandra/data/solr_data
+dsefs_work_dir=/opt/cassandra/dsefs
+dsefs_data_dir=/opt/cassandra/dsefs/data
+install_edition=dse
+dc1=ch
+dc1_rf=2
+dc2=po
+dc2_rf=3
+casdba_paswd=S3cureMet00
+cas_paswd=kill-9me
+
+[spark_nodes]
+cascds-c5-c00004-g.ch.tvx.comcast.com node_ip=10.54.80.51 repair_weekday=WED,SAT seed=true dc=po rack=potest
+cascds-c5-c00005-g.ch.tvx.comcast.com node_ip=10.54.80.52 repair_weekday=WED,SAT seed=true dc=po rack=potest
+
+[spark_nodes:vars]
+spark=true
+SPARK_ENABLED=1
+SPARK_WORKER_DIR=/opt/cassandra/spark/worker
+SPARK_LOCAL_DIRS=/opt/cassandra/spark/rdd
+SPARK_WORKER_LOG_DIR=/opt/cassandra/logs/spark/worker
+SPARK_MASTER_LOG_DIR=/opt/cassandra/logs/spark/master

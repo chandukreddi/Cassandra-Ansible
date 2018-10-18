@@ -1,0 +1,13 @@
+export PATH=$PATH:/opt/xcal/bin:{{ dse_home }}/bin:{{ dse_home }}/resources/cassandra/bin
+
+export PATH 
+CASSANDRA_HOME={{ dse_home }}; export CASSANDRA_HOME
+CASSANDRA_CONF={{ cassandra_conf }}; export CASSANDRA_CONF
+DSE_CONF={{ dse_conf }}; export DSE_CONF
+SPARK_CONF={{ SPARK_CONF_DIR }}; export SPARK_CONF
+CASSANDRA_LOG={{ log_base }}; export CASSANDRA_LOG
+alias home='cd $CASSANDRA_HOME'
+alias conf='cd $CASSANDRA_CONF'
+alias dconf='cd $DSE_CONF'
+alias sconf='cd $SPARK_CONF'
+alias logs='cd $CASSANDRA_LOG'

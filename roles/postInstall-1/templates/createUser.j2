@@ -1,0 +1,2 @@
+CREATE ROLE IF NOT EXISTS casdba WITH SUPERUSER = true and LOGIN = true and PASSWORD =  '{{ casdba_paswd }}'; 
+ALTER ROLE cassandra WITH PASSWORD = '{{ cas_paswd }}';

@@ -1,0 +1,9 @@
+---
+
+- include: DSEcassandraconfig.yml
+  when: install_edition == 'dse' 
+
+- include: ACcassandraconfig.yml
+  when: install_edition == 'ac'
+
+

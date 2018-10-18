@@ -1,0 +1,6 @@
+ALTER KEYSPACE cfs WITH replication = {'class': 'NetworkTopologyStrategy', '{{ dc1 }}': '{{ dc1_rf }}', '{{ dc2 }}': '{{ dc2_rf }}'} ;
+ALTER KEYSPACE cfs_archive WITH replication = {'class': 'NetworkTopologyStrategy', '{{ dc1 }}': '{{ dc1_rf }}', '{{ dc2 }}': '{{ dc2_rf }}'} ;
+ALTER KEYSPACE dse_leases WITH replication = {'class': 'NetworkTopologyStrategy', '{{ dc1 }}': '{{ dc1_rf }}', '{{ dc2 }}': '{{ dc2_rf }}'} ;
+ALTER KEYSPACE dsefs WITH replication = {'class': 'NetworkTopologyStrategy', '{{ dc1 }}': '{{ dc1_rf }}', '{{ dc2 }}': '{{ dc2_rf }}'} ;
+ALTER KEYSPACE "HiveMetaStore" WITH replication = {'class': 'NetworkTopologyStrategy', '{{ dc1 }}': '{{ dc1_rf }}', '{{ dc2 }}': '{{ dc2_rf }}'} ;
+ALTER KEYSPACE spark_system WITH replication = {'class': 'NetworkTopologyStrategy', '{{ dc1 }}': '{{ dc1_rf }}', '{{ dc2 }}': '{{ dc2_rf }}'} ;

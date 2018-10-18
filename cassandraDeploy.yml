@@ -1,0 +1,39 @@
+---
+
+- name: Cassandra Binaries Install and Configure
+  hosts: all_cassandra_nodes
+  roles:
+   # - { role: hostvars , tags: ['hostvars'] }
+    - { role: serviceStop , tags: ['cassandra-stop'] }
+    - { role: cassandraInstall , tags: ['cassandraBinaries'] }
+    - { role: cassandraConfig , tags: ['cassandraConfig'] }
+
+- name: Spark Nodes Configuration
+  hosts: spark_nodes
+  roles: 
+    - { role: spark , tags: ['sparkConfig'], when: install_edition == 'dse' and (spark | default(false)) == 'true' }
+
+- name: Solr Nodes Configuration
+  hosts: solr_nodes
+  roles:
+    - { role: solr , tags: ['solrConfig'], when: install_edition == 'dse' and (solr | default(false)) == 'true' }
+
+
+- name: Services start
+  hosts: all_cassandra_nodes
+  serial:
+  - 1
+  - 5
+  roles:
+    - { role: serviceStart, tags: ['cassandra-start'] }
+
+- name: PostInstall-1(RF, user and repair) steps
+  hosts: plain_cassandra_nodes[0]  
+  roles:
+    - { role: postInstall-1 , tags: ['postInstall-1'] }
+
+- name: Postinstall-2 (cqlshrc and bashprofile) configuration
+  hosts: all_cassandra_nodes
+  roles:
+    - { role: postInstall-2, tags: ['postInstall-2'] }
+

@@ -1,0 +1,51 @@
+---
+
+- name: Template seed list
+  template: src=seeds.j2 dest=/tmp/seed_list mode=0664
+
+- name: Load seed list
+  shell: cat /tmp/seed_list
+  register: seed_list
+
+- name: Set seeds fact
+  set_fact: seeds={{ seed_list.stdout }}
+
+- debug: var=seeds
+- name: Updating Cassandra.yaml file
+  template: src=cassandra.yaml_5.1.5.j2  dest={{ cassandra_conf }}/cassandra.yaml backup=yes mode=0755
+  tags: cassandra.yaml
+
+- name: Updating logback.xml file
+  template: src=logback.xml_5.1.5.j2 dest={{ cassandra_conf }}/logback.xml backup=yes mode=0755
+  tags: logback.xml
+
+- name: Updating cassandra-rackdc.properties file
+  template: src=cassandra-rackdc.properties.j2 dest={{ cassandra_conf }}/cassandra-rackdc.properties backup=yes mode=0755
+  tags: cassandra-rackdc.properties
+
+- stat: path={{ cassandra_conf }}/cassandra-topology.properties
+  register: topology_file
+- debug: var=topology_file.stat
+- name: Renaming cassandra-topology.properties file
+  command: mv {{ cassandra_conf }}/cassandra-topology.properties {{ cassandra_conf }}/cassandra-topology.properties-org
+  when: topology_file.stat.exists
+  tags: topology
+
+- name: Updating cassandra-env.sh file
+  template: src=cassandra-env.sh_5.1.5.j2 dest={{ cassandra_conf }}/cassandra-env.sh backup=yes mode=0755
+  tags: cassandra-env.sh
+ 
+- name: Updating jvmoptions file
+  template: src=jvm.options_5.1.5.j2 dest={{ cassandra_conf }}/jvm.options backup=yes mode=0755
+  tags: jvm.options
+
+- name: Updating dse.yaml file
+  template: src=dse.yaml_5.1.5.j2 dest={{ dse_conf }}/dse.yaml backup=yes mode=0755
+  tags: dse.yaml
+
+- name: Updating dse.default file
+  template: src=dse.default_5.1.5.j2 dest={{ dse_conf }}/dse.default  backup=yes mode=0755 
+  #include_vars:
+   # file: dse.default
+    #name: {{ SOLR_ENABLED | default('0') }}
+  tags: dse.default

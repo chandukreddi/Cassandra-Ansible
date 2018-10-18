@@ -1,0 +1,32 @@
+---
+
+- name: Setup Repair Cron Jobs
+  cron:
+    name: "Repair Jobs"
+    weekday: "{{ repair_weekday }}"
+    minute: "{{ repair_start_minute | default('0') }}"
+    hour: "{{ repair_start_hour | default('08') }}"
+    job: "/opt/xcal/bin/cassandra_auto_repair"
+    disabled: no
+  tags: cronrepair
+
+- name: Setup Cassandra stats Job
+  cron:
+    name: "Cassandra Stats"
+    minute: "1"
+    job: "/opt/xcal/bin/cassandra_stats"
+    disabled: no
+
+- name: Space Monitor Job
+  cron:
+    name: "Space monitor"
+    minute: "1"
+    job: "/opt/xcal/bin/disk_space_monitor.sh"
+    disabled: no
+
+- name: OS Stats Job
+  cron:
+    name: "OS Stats Monitor Job"
+    minute: "1"
+    job: :  "/opt/xcal/bin/sys_stats"
+    disabled: no

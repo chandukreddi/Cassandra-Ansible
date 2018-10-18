@@ -1,0 +1,41 @@
+---
+
+- name: Template seed list
+  template: src=seeds.j2 dest=/tmp/seed_list mode=0664
+
+- name: Load seed list
+  shell: cat /tmp/seed_list
+  register: seed_list
+
+- name: Set seeds fact
+  set_fact: seeds={{ seed_list.stdout }}
+
+- debug: var=seeds
+- name: Updating Cassandra.yaml file
+  template: src=ACcassandra.yaml_3.11.1.j2  dest={{ Acassandra_conf }}/cassandra.yaml backup=yes mode=0755
+  tags: cassandra.yaml
+
+- name: Updating Apache logback.xml file
+  template: src=AClogback.xml_3.11.1.j2 dest={{ Acassandra_conf }}/logback.xml backup=yes mode=0755
+  tags: logback.xml
+
+- name: Updating Apache cassandra-rackdc.properties file
+  template: src=cassandra-rackdc.properties.j2 dest={{ Acassandra_conf }}/cassandra-rackdc.properties backup=yes mode=0755
+  tags: cassandra-rackdc.properties
+
+- stat: path={{ Acassandra_conf }}/cassandra-topology.properties
+  register: topology_file
+- debug: var=topology_file.stat
+- name: Renaming Apache cassandra-topology.properties file
+  command: mv {{ Acassandra_conf }}/cassandra-topology.properties {{ Acassandra_conf }}/cassandra-topology.properties-org
+  when: topology_file.stat.exists
+  tags: topology
+
+- name: Updating Apache cassandra-env.sh file
+  template: src=cassandra-env.sh_5.1.5.j2 dest={{ Acassandra_conf }}/cassandra-env.sh backup=yes mode=0755
+  tags: cassandra-env.sh
+ 
+- name: Updating Apache jvmoptions file
+  template: src=jvm.options_5.1.5.j2 dest={{ Acassandra_conf }}/jvm.options backup=yes mode=0755
+  tags: jvm.options
+

@@ -1,0 +1,8 @@
+cassandra_repo: /opt/ansible/cassandra_repo
+maintenance_scripts: /opt/ansible/cassandra_repo/maintanence
+dse_home: /opt/xcal/apps/dse
+cassandra_conf: /opt/xcal/apps/dse/resources/cassandra/conf
+dse_conf: /opt/xcal/apps/dse/resources/dse/conf
+SPARK_CONF_DIR: /opt/xcal/apps/dse/resources/spark/conf
+apache_home: /opt/xcal/apps/apache
+Acassandra_conf: /opt/xcal/apps/apache/conf 

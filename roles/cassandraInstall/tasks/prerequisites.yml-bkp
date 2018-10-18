@@ -1,0 +1,28 @@
+---
+
+#- name: JDK Check
+#- name: limits conf
+
+- name: Creating necessary Directories if they don not exist
+  file: path={{ item }} state=directory mode=0755 group=xdeploy owner=xdeploy
+   #become: true
+   #become_user: root
+  with_items:
+    - /opt/xcal
+    - /opt/xcal/apps
+    - /opt/xcal/bin
+    - /opt/cassandra/logs
+    - /opt/cassandra/logs/audit
+    - /opt/cassandra/logs/spark
+    - /opt/cassandra/logs/spark/job-server
+    - /opt/cassandra/logs/spark/master
+    - /opt/cassandra/logs/spark/worker
+    - /opt/cassandra/logs/solr
+    - /opt/cassandra/data
+    - /opt/cassandra/commit_logs
+    - /opt/cassandra/hints
+    - /opt/cassandra/saved_caches
+    - /opt/cassandra/data/solr_data
+    - /opt/cassandra/spark/worker
+    - /opt/cassandra/spark/rdd
+  tags: dir_create

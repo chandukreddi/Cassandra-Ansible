@@ -1,0 +1,39 @@
+---
+- name: Check if DSE Cassandra already Exists
+  stat: path=/opt/xcal/apps/dse-{{ dse_version }}
+  register: install_version
+  #failed_when: install_version.stat.exists == true
+  failed_when: install_version.stat.exists == true
+  tags: 
+     - checkinstall
+#- debug: var=install_version
+
+- name: Downloading DSE Binaries to LOCAL
+  copy: src={{ cassandra_repo }}/binaries/dse-{{ dse_version }}-bin.tar.gz dest=/opt/xcal/apps/ owner=xdeploy group=xdeploy
+  tags:
+     - download
+
+- name: Unzip the Binaries
+  unarchive: src=/opt/xcal/apps/dse-{{ dse_version }}-bin.tar.gz dest=/opt/xcal/apps/ copy=no owner=xdeploy group=xdeploy mode=0755
+  tags:
+     - unzip
+
+- name: Creating a DSE Soft Link
+  file: src=/opt/xcal/apps/dse-{{ dse_version }} dest=/opt/xcal/apps/dse owner=xdeploy group=xdeploy state=link
+  tags: 
+     - sl
+
+- name: Configuring DSE Cassandra init file
+  template: src=DSEcassandra.j2 dest=/etc/init.d/cassandra owner=xdeploy group=xdeploy mode=0755  
+  become: true
+  become_user: root
+  tags: 
+     - init
+
+- name: Copying ALL Maintenance Scripts
+  copy: src={{ item }} dest=/opt/xcal/bin/ owner=xdeploy group=xdeploy mode=0755
+  with_fileglob:
+    - /opt/ansible/cassandra_repo/maintanence/* 
+  when: install_edition == 'dse'
+  tags: scripts
+

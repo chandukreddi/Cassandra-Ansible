@@ -1,0 +1,9 @@
+---
+
+- include: prerequisites.yml 
+
+- include: DSEbinariesInstall.yml
+  when: install_edition == 'dse'
+
+- include: ACbinariesInstall.yml
+  when: install_edition == 'ac'

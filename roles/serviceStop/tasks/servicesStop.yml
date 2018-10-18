@@ -1,0 +1,12 @@
+---
+
+- name: Stoping Cassandra Service If running
+  service: name=cassandra state=stopped
+  become: true
+  become_user: root
+  register: stop_result
+  tags: cassandra-stop
+#- name: pause about 20 sec untill it complete stop
+ # pause: seconds=20
+- debug: var=stop_result
+
